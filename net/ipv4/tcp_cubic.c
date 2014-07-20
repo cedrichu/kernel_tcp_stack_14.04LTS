@@ -43,11 +43,11 @@
 #define HYSTART_DELAY_MAX	(16U<<3)
 #define HYSTART_DELAY_THRESH(x)	clamp(x, HYSTART_DELAY_MIN, HYSTART_DELAY_MAX)
 
-static int fast_convergence __read_mostly = 1;
-static int beta __read_mostly = 717;	/* = 717/1024 (BICTCP_BETA_SCALE) */
+static int fast_convergence __read_mostly = 0;
+static int beta __read_mostly = 934;	/* = 717/1024 (BICTCP_BETA_SCALE) */
 static int initial_ssthresh __read_mostly;
-static int bic_scale __read_mostly = 41;
-static int tcp_friendliness __read_mostly = 1;
+static int bic_scale __read_mostly = 82;
+static int tcp_friendliness __read_mostly = 0;
 
 static int hystart __read_mostly = 1;
 static int hystart_detect __read_mostly = HYSTART_ACK_TRAIN | HYSTART_DELAY;
@@ -333,8 +333,10 @@ static u32 bictcp_recalc_ssthresh(struct sock *sk)
 
 	/* Wmax and fast convergence */
 	if (tp->snd_cwnd < ca->last_max_cwnd && fast_convergence)
-		ca->last_max_cwnd = (tp->snd_cwnd * (BICTCP_BETA_SCALE + beta))
-			/ (2 * BICTCP_BETA_SCALE);
+		/*ca->last_max_cwnd = (tp->snd_cwnd * (BICTCP_BETA_SCALE + beta))
+			/ (2 * BICTCP_BETA_SCALE);*/
+		ca->last_max_cwnd = (tp->snd_cwnd * (tp->srtt + tp->srtt_min))
+					/ (2 * tp->srtt);
 	else
 		ca->last_max_cwnd = tp->snd_cwnd;
 
