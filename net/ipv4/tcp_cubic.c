@@ -343,7 +343,7 @@ static u32 bictcp_recalc_ssthresh(struct sock *sk)
 	ca->loss_cwnd = tp->snd_cwnd;
 
 	//return max((tp->snd_cwnd * beta) / BICTCP_BETA_SCALE, 2U);
-	return max(((tp->snd_cwnd * 2)*tp->srtt_min) / tp->srtt, 2U);
+	return max(((tp->snd_cwnd * 3)*tp->srtt_min) / tp->srtt, 2U);
 }
 
 static u32 bictcp_undo_cwnd(struct sock *sk)

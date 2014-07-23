@@ -509,7 +509,7 @@ static void tcp_rcv_rtt_update(struct tcp_sock *tp, u32 sample, int win_dep)
 	{
 		tp->rcv_rtt_est.rtt = new_sample;
 		tp->rcv_rtt_est.rtt_min = min(new_sample, tp->rcv_rtt_est.rtt_min);
-		tp->rcv_rtt_est.rwnd = 2 * tp->rcv_rtt_est.rtt_min * tp->rcv_wnd / new_sample;
+		tp->rcv_rtt_est.rwnd = 3 * tp->rcv_rtt_est.rtt_min * tp->rcv_wnd / new_sample;
 	}
 }
 
